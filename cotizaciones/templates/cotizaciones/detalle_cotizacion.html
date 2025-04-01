@@ -1,0 +1,41 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}Detalle de Cotización{% endblock %}
+
+{% block content %}
+    <h1>Folio #{{ cotizacion.id }}</h1>
+    <p>Cliente: {{ cotizacion.cliente.nombre }}</p>
+    <p>Fecha de Emisión: {{ cotizacion.fecha_emision }}</p>
+    <p>Fecha de Vencimiento: {{ cotizacion.fecha_vencimiento }}</p>
+    <p>Condiciones de pago: {{ cotizacion.condiciones_pago }}</p>
+    <p>Condiciones adicionales: {{ cotizacion.condiciones_adicionales }}</p>
+    <p>Estado: {{ cotizacion.estado }}</p>
+    
+    <h2>Elementos</h2>
+    <table>
+        <tr>
+            <th>Descripción</th>
+            <th>Unidad de medida</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for item in cotizacion.items.all %}
+        <tr>
+            <td>{{ item.descripcion }}</td>
+            <td>{{ item.unidad_medida }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>${{ item.precio_unitario }}</td>
+            <td>${{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    
+    <h3>Subtotal: {{ cotizacion.subtotal }}</h3>
+    <h3>Descuento: {{ cotizacion.descuentos }}</h3>
+    <h3>Impuesto: ${{ cotizacion.impuestos }}</h3>
+    <h3>Total: ${{ cotizacion.total }}</h3>
+    <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn">Editar</a>
+    <a href="{% url 'eliminar_cotizacion' cotizacion.id %}" class="btn btn-danger">Eliminar</a>
+{% endblock %}

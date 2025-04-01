@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Gestionar Trabajador: {{ trabajador.username }}</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Información del Trabajador</h5>
+            <p><strong>Nombre:</strong> {{ trabajador.first_name }} {{ trabajador.last_name }}</p>
+            <p><strong>Email:</strong> {{ trabajador.email }}</p>
+            <p><strong>Estado:</strong> 
+                {% if trabajador.perfil.activo %}
+                    <span class="badge bg-success">Activo</span>
+                {% else %}
+                    <span class="badge bg-danger">Inactivo</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        {% if trabajador.perfil.activo %}
+            <button type="submit" name="accion" value="desactivar" class="btn btn-warning">
+                Desactivar Trabajador
+            </button>
+        {% else %}
+            <button type="submit" name="accion" value="activar" class="btn btn-success">
+                Activar Trabajador
+            </button>
+        {% endif %}
+        <button type="submit" name="accion" value="eliminar" class="btn btn-danger">
+            Eliminar Trabajador
+        </button>
+        <a href="{% url 'usuarios:panel_dueno' %}" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+{% endblock %}

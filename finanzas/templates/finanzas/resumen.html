@@ -1,0 +1,314 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}Resumen Financiero{% endblock %}
+
+{% block content %}
+    <h1>Resumen Financiero</h1>
+    
+    <!-- Formulario de filtro por fechas -->
+    <div class="filtro-fechas">
+        <form method="get">
+            <div class="filtro-group">
+                <label for="fecha_inicio">Desde:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ fecha_inicio|default:'' }}">
+            </div>
+            
+            <div class="filtro-group">
+                <label for="fecha_fin">Hasta:</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" value="{{ fecha_fin|default:'' }}">
+            </div>
+            
+            <button type="submit" class="btn-filtrar">Filtrar</button>
+            
+            {% if fecha_inicio or fecha_fin %}
+                <a href="{% url 'resumen_finanzas' %}" class="btn-limpiar">Limpiar filtros</a>
+            {% endif %}
+        </form>
+    </div>
+    
+    {% if fecha_inicio or fecha_fin %}
+        <div class="periodo-filtrado">
+            <p>Mostrando resultados del período: 
+                <strong>{{ fecha_inicio|date:"d/m/Y"|default:"inicio" }}</strong> al 
+                <strong>{{ fecha_fin|date:"d/m/Y"|default:"hoy" }}</strong>
+            </p>
+        </div>
+    {% endif %}
+
+    <!-- Tarjetas para mostrar totales y saldo -->
+    <div class="resumen-cards">
+        <!-- Tarjeta de Ingresos -->
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="card-content">
+                <h3>Ingresos Totales</h3>
+                <p>${{ ingresos_totales|floatformat:2 }}</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Egresos -->
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="card-content">
+                <h3>Egresos Totales</h3>
+                <p>${{ egresos_totales|floatformat:2 }}</p>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Saldo -->
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-balance-scale"></i>
+            </div>
+            <div class="card-content">
+                <h3>Saldo</h3>
+                <p class="saldo {% if saldo >= 0 %}saldo-positivo{% else %}saldo-negativo{% endif %}">${{ saldo|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfica -->
+    <div class="grafica-container">
+        <h2>Gráfica de Ingresos y Egresos</h2>
+        <canvas id="graficaFinanzas"></canvas>
+    </div>
+
+    <!-- Pasar datos de Django a JavaScript usando json_script -->
+    {{ ingresos_totales|json_script:"ingresos_totales" }}
+    {{ egresos_totales|json_script:"egresos_totales" }}
+
+    <!-- Cargar Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Obtener datos desde Django usando json_script
+        const ingresos_totales = JSON.parse(document.getElementById('ingresos_totales').textContent);
+        const egresos_totales = JSON.parse(document.getElementById('egresos_totales').textContent);
+
+        // Datos para la gráfica
+        const datos = {
+            labels: ['Ingresos', 'Egresos'],
+            datasets: [{
+                label: 'Resumen Financiero',
+                data: [ingresos_totales, egresos_totales],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)', // Color para ingresos
+                    'rgba(255, 99, 132, 0.2)', // Color para egresos
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Configuración de la gráfica
+        const config = {
+            type: 'bar', // Tipo de gráfica (barra)
+            data: datos,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.raw.toFixed(2);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toFixed(2);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Crear la gráfica
+        const graficaFinanzas = new Chart(
+            document.getElementById('graficaFinanzas'),
+            config
+        );
+    </script>
+
+    <!-- Estilos CSS -->
+    <style>
+        /* Estilos para el filtro de fechas */
+        .filtro-fechas {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .filtro-fechas form {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filtro-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filtro-fechas label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .filtro-fechas input[type="date"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn-filtrar {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-filtrar:hover {
+            background-color: #45a049;
+        }
+        
+        .btn-limpiar {
+            color: #2196F3;
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .btn-limpiar:hover {
+            text-decoration: underline;
+        }
+        
+        .periodo-filtrado {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        /* Estilos para las tarjetas */
+        .resumen-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .card-content h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #333;
+        }
+        
+        .card-content p {
+            margin: 10px 0 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        /* Estilos para el saldo */
+        .saldo-positivo {
+            color: #28a745; /* Verde para saldo positivo */
+        }
+        
+        .saldo-negativo {
+            color: #dc3545; /* Rojo para saldo negativo */
+        }
+        
+        /* Estilos para la gráfica */
+        .grafica-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .grafica-container h2 {
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        /* Estilos generales */
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            .resumen-cards {
+                flex-direction: column;
+            }
+            
+            .filtro-fechas form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn-filtrar {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .btn-limpiar {
+                margin-left: 0;
+                margin-top: 10px;
+                text-align: center;
+                display: block;
+            }
+        }
+    </style>
+{% endblock %}

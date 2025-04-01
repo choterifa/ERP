@@ -1,0 +1,29 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}Lista de Egresos{% endblock %}
+
+{% block content %}
+ 
+
+    <h1>Lista de Egresos</h1>
+    <a href="{% url 'crear_egreso' %}"class="btn">Agregar Egreso</a>
+    <table>
+        <tr>
+            <th>Monto</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+        {% for egreso in egresos %}
+        <tr>
+            <td>{{ egreso.monto }}</td>
+            <td>{{ egreso.descripcion }}</td>
+            <td>{{ egreso.fecha }}</td>
+            <td class="actions">
+                <a href="{% url 'editar_egreso' egreso.pk %}"class="btn">Editar</a>
+                <a href="{% url 'eliminar_egreso' egreso.pk %}"class="btn">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>    
+{% endblock %}

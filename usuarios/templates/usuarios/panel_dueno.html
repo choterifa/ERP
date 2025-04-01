@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Panel del Dueño</h1>
+    
+    <div class="mb-4">
+        <a href="{% url 'usuarios:registrar_trabajador' %}" class="btn btn-primary">
+            Registrar Nuevo Trabajador
+        </a>
+    </div>
+    
+    <h2>Lista de Trabajadores</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trabajador in trabajadores %}
+            <tr>
+                <td>{{ trabajador.username }}</td>
+                <td>{{ trabajador.first_name }} {{ trabajador.last_name }}</td>
+                <td>{{ trabajador.email }}</td>
+                <td>
+                    {% if trabajador.perfil.activo %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'usuarios:gestionar_trabajador' trabajador.id %}" class="btn btn-sm btn-info">
+                        Gestionar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

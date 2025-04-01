@@ -1,0 +1,152 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar Cotización{% else %}Crear Cotización{% endif %}{% endblock %}
+
+{% block content %}
+    <h1>{% if form.instance.pk %}Editar Cotización{% else %}Crear Cotización{% endif %}</h1>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}  <!-- Asegúrate de incluir esto -->
+
+            <!-- Campos del formulario principal -->
+            <div class="form-group">
+                <label for="{{ form.cliente.id_for_label }}">Cliente:</label>
+                {{ form.cliente }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.fecha_vencimiento.id_for_label }}">Fecha de Vencimiento:</label>
+                {{ form.fecha_vencimiento }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.estado.id_for_label }}">Estado:</label>
+                {{ form.estado }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.condiciones_pago.id_for_label }}">Condiciones de pago:</label>
+                {{ form.condiciones_pago }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.condiciones_adicionales.id_for_label }}">Condiciones adicionales:</label>
+                {{ form.condiciones_adicionales }}
+            </div>
+
+            <!-- Campos para impuestos y descuentos -->
+            <div class="form-group">
+                <label for="{{ form.porcentaje_impuestos.id_for_label }}">Impuestos (%):</label>
+                {{ form.porcentaje_impuestos }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.porcentaje_descuentos.id_for_label }}">Descuentos (%):</label>
+                {{ form.porcentaje_descuentos }}
+            </div>
+
+            <!-- Ítems de la cotización -->
+            <h2>Elementos de la Cotización</h2>
+            <table class="table" id="items-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Unidad de medida</th>
+                        <th>Precio Unitario</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                        <tr class="item-row">
+                            <td>{{ form.descripcion }}</td>
+                            <td>{{ form.cantidad }}</td>
+                            <td>{{ form.unidad_medida }}</td>
+                            <td>{{ form.precio_unitario }}</td>
+                            <td>{{ form.DELETE }}</td>   
+                            {{ form.id }}  <!-- Campo oculto para el ID del ítem -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Botón para agregar más ítems -->
+            <button type="button" id="add-item" class="btn btn-secondary">Agregar elemento</button>
+
+            <!-- Botones de acción -->
+            <button type="submit" class="btn">Guardar</button>
+            <a href="{% url 'lista_cotizaciones' %}" class="btn btn-cancelar">Cancelar</a>
+        </form>
+    </div>
+
+    <!-- JavaScript para funcionalidad dinámica -->
+    <script>
+        // Función para agregar un nuevo ítem
+        document.getElementById('add-item').addEventListener('click', function() {
+    const table = document.getElementById('items-table').getElementsByTagName('tbody')[0];
+    const totalForms = document.getElementById('id_items-TOTAL_FORMS');  // Usa el prefijo 'items'
+    const formNum = parseInt(totalForms.value);
+
+    console.log("Agregando ítem número:", formNum); // Depuración
+
+    // Crear una nueva fila
+    const newRow = document.createElement('tr');
+    newRow.classList.add('item-row');
+    newRow.innerHTML = `
+        <td>
+            <input type="text" name="items-${formNum}-descripcion" placeholder="Descripción del ítem" maxlength="255" required>
+        </td>
+        <td>
+            <input type="number" name="items-${formNum}-cantidad" placeholder="Cantidad" required>
+        </td>
+        <td>
+            <input type="text" name="items-${formNum}-unidad_medida" placeholder="Unidad de medida">
+        </td>
+        <td>
+            <input type="number" name="items-${formNum}-precio_unitario" placeholder="Precio unitario" step="0.01" required>
+        </td>
+        <td>
+            <input type="checkbox" name="items-${formNum}-DELETE">
+        </td>
+    `;
+
+    // Agregar la nueva fila a la tabla
+    table.appendChild(newRow);
+    console.log("Nueva fila agregada:", newRow.innerHTML); // Depuración
+
+    // Actualizar el valor de TOTAL_FORMS en el management form
+    totalForms.value = formNum + 1;
+    console.log("Nuevo valor de TOTAL_FORMS:", totalForms.value); // Depuración
+});
+
+        // Función para eliminar ítems en tiempo real
+        document.getElementById('items-table').addEventListener('change', function(event) {
+            if (event.target.type === 'checkbox' && event.target.name.includes('-DELETE')) {
+                const row = event.target.closest('tr');
+                row.remove();  // Eliminar la fila del DOM
+                // row.style.display = 'none';  // Ocultar la fila
+                // Marcar el campo DELETE como true
+
+                event.target.value = 'on';  // Django espera 'on' para campos DELETE marcados
+                // Actualizar el valor de TOTAL_FORMS en el management form
+                const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+                totalForms.value = parseInt(totalForms.value) - 1;
+                console.log("Nuevo valor de TOTAL_FORMS:", totalForms.value); // Depuración
+            }
+        });
+
+
+        document.addEventListener("input", function(event) {
+    if (event.target.type === "number") {
+        if (event.target.value < 0) {
+            event.target.value = 0;
+        }
+    }
+});  
+
+document.addEventListener("input", function(event) {
+    if (event.target.id === "id_porcentaje_impuestos" || event.target.id === "id_porcentaje_descuentos") {
+        let value = parseFloat(event.target.value);
+        if (value < 0) event.target.value = 0;
+        if (value > 100) event.target.value = 100;
+    }
+});
+    </script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}Lista de Cotizaciones{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos para los estados */
+    .pendiente {
+        background-color: orange;
+        color: white;
+        font-weight: bold;
+        padding: 3px 6px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .aceptado {
+        background-color: green;
+        color: white;
+        font-weight: bold;
+        padding: 3px 6px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .rechazado {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        padding: 3px 6px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    /* Centrar contenido verticalmente en las celdas */
+    table td {
+        vertical-align: middle;
+    }
+</style>
+
+<h1>Lista de Cotizaciones</h1>
+<a href="{% url 'crear_cotizacion' %}" class="btn">Crear Cotización</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Fecha de Emisión</th>
+        <th>Fecha de Vencimiento</th>
+        <th>Estado</th>
+        <th>Total</th>
+        <th>Acciones</th>
+    </tr>
+    {% for cotizacion in cotizaciones %}
+    <tr>
+        <td>{{ cotizacion.id }}</td>
+        <td>{{ cotizacion.cliente.nombre }}</td>
+        <td>{{ cotizacion.fecha_emision }}</td>
+        <td>{{ cotizacion.fecha_vencimiento }}</td>
+        <td>
+            <span class="{% if cotizacion.estado == 'pendiente' %}pendiente{% elif cotizacion.estado == 'aceptada' %}aceptado{% else %}rechazado{% endif %}">
+                {{ cotizacion.estado }}
+            </span>
+        </td>
+        <td>${{ cotizacion.total }}</td>
+        <td>
+            <a href="{% url 'detalle_cotizacion' cotizacion.id %}" class="btn">Ver</a>
+            <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="btn">Editar</a>
+            <a href="{% url 'eliminar_cotizacion' cotizacion.id %}" class="btn">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

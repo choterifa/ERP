@@ -1,0 +1,27 @@
+{% extends 'finanzas/menu.html' %}
+
+{% block title %}Lista de Ingresos{% endblock %}
+
+{% block content %}
+    <h1>Lista de Ingresos</h1>
+    <a href="{% url 'crear_ingreso' %}"class="btn">Agregar Ingreso</a>
+    <table>
+        <tr>
+            <th>Monto</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+        {% for ingreso in ingresos %}
+        <tr>
+            <td>{{ ingreso.monto }}</td>
+            <td>{{ ingreso.descripcion }}</td>
+            <td>{{ ingreso.fecha }}</td>
+            <td class="actions">
+                <a href="{% url 'editar_ingreso' ingreso.pk %}"class="btn">Editar</a>
+                <a href="{% url 'eliminar_ingreso' ingreso.pk %}"class="btn">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

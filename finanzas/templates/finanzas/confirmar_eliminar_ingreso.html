@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Ingreso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .confirmation-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <h1>¿Estás seguro de que quieres eliminar este ingreso?</h1>
+        <p>{{ ingreso.descripcion }} - {{ ingreso.monto }} ({{ ingreso.fecha }})</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Sí, eliminar</button>
+        </form>
+        <a href="{% url 'lista_ingresos' %}">Cancelar</a>
+    </div>
+</body>
+</html>
