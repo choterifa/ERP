@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    /* outline: 1px solid red; */
+}
+
+:root {
+    --border_btns: 8px;
+}
+
+/* Estilos generales */
+body {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+/* Menú lateral */
+.menu-lateral {
+    width: 5%;
+    background-color: #2c3e50;
+    height: 100vh;
+    padding: 20px 10px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.menu-lateral:hover {
+    width: 200px;
+    /* Ancho expandido */
+}
+
+.menu-lateral h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    white-space: nowrap;
+    /* Evita el salto de línea */
+    opacity: 1;
+    /* Oculta el texto cuando el menú está retraído---modificado: se cambio a 1 para que se vea la letra menu */
+    transition: opacity 0.3s ease;
+    /* Transición suave */
+}
+
+.menu-lateral:hover h2 {
+    opacity: 1;
+    /* Muestra el texto cuando el menú está expandido */
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-lateral ul li {
+    margin-bottom: 10px;
+}
+
+.menu-lateral ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    /* Centra el ícono y el texto verticalmente */
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+    /* Evita el salto de línea */
+    opacity: 0;
+    /* Oculta el texto cuando el menú está retraído */
+    transition: opacity 0.3s ease;
+    /* Transición suave */
+}
+
+.menu-lateral:hover ul li a {
+    opacity: 1;
+    /* Muestra el texto cuando el menú está expandido */
+}
+
+.menu-lateral ul li a:hover {
+    background-color: #34495e;
+}
+
+/* Íconos (opcional) */
+.menu-lateral ul li a i {
+    margin-right: 10px;
+    /* Espacio entre el ícono y el texto */
+}
+
+/* Contenido principal */
+.contenido-principal {
+    margin-left: 90px;
+    /* Ajusta el margen para el menú retraído + separación */
+    padding: 20px;
+    width: calc(100% - 90px);
+    transition: margin-left 0.3s ease, filter 0.3s ease;
+    /* Transición suave */
+}
+
+/* Efecto de difuminado cuando el menú está expandido */
+.menu-lateral:hover~.contenido-principal {
+    filter: blur(2px);
+    /* Aplica un difuminado al contenido principal */
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.actions a {
+    margin-right: 10px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+/* Botones */
+a.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+a.btn:hover {
+    background-color: #218838;
+}
