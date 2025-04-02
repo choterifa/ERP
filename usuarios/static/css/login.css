@@ -53,10 +53,11 @@ select {
 }
 
 .login-logo {
-    width: 131px;
-    height: 130px;
-    background-color: red;
+    width: 91px;
+    height: 90px;
+    /* background-color: red; */
 }
+
 
 h2 {
     font-size: 1.5rem;
