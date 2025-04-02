@@ -4,121 +4,148 @@
 
 {% block content %}
 <style>
-   /* Estilos generales */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-/* Contenedor principal */
-.content-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-}
+    /* Estilos generales */
+    body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
 
-/* Título */
-.content-container h1 {
-    font-size: 24px;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    text-align: center;
-}
+    /* Contenedor principal */
+    .content-container {
+        padding: 20px;
+        margin: 0 auto;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-/* Contenedor del formulario */
-.form-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+    /* Título */
+    .cliente-titulo {
+        font-size: 24px;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 
-/* Campos del formulario */
-.form-fields p {
-    margin-bottom: 15px;
-}
+    .cliente-parrafo {
+        color: rgb(147, 147, 147);
+        font-size: 15px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
 
-.form-fields label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #34495e;
-}
+    /* Contenedor del formulario */
+    .form-container {
+        padding: 38px 40px;
+        max-width: 520px;
+        border-radius: 17px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
 
-.form-fields input,
-.form-fields select,
-.form-fields textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
-}
+    /* Campos del formulario */
+    .form-fields p {
+        margin-bottom: 13.5px;
+    }
 
-.form-fields input:focus,
-.form-fields select:focus,
-.form-fields textarea:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
+    .form-fields label {
+        display: block;
+        margin-bottom: 4px;
+        font-family: inherit;
+        font-weight: 500;
+        color: #34495e;
+    }
 
-/* Botones del formulario */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
+    .form-fields input,
+    .form-fields select,
+    .form-fields textarea {
+        width: 100%;
+        padding: 10px 18px;
+        border: none;
+        font-size: 14px;
+        color: rgb(79, 80, 86);
+        font-family: inherit;
+        box-sizing: border-box;
+        text-overflow: ellipsis;
+        background-color: rgb(245, 245, 245);
+        border-radius: 8px;
+        height: 45px;
+    }
 
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-}
+    #id_direccion {
+        resize: none;
+    }
 
-.btn-guardar {
-    background-color: #28a745;
-    color: #fff;
-}
 
-.btn-guardar:hover {
-    background-color: #218838;
-}
 
-.btn-cancelar {
-    background-color: #dc3545;
-    color: #fff;
-}
+    .form-fields input:focus,
+    .form-fields select:focus,
+    .form-fields textarea:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
 
-.btn-cancelar:hover {
-    background-color: #c82333;
-} 
+    /* Botones del formulario */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+
+    .btn-guardar {
+        font-size: 16.2px;
+        font-family: inherit;
+        width: 100%;
+        height: 52px;
+        border-radius: 12px;
+        background-color: rgb(34, 82, 255);
+        color: white;
+        border: none;
+    }
+
+    .btn-guardar:hover {
+        background-color: rgb(23, 62, 202);
+    }
+
+    .btn-cancelar {
+        color: #333;
+        font-size: 15px;
+        font-family: inherit;
+        text-decoration: none;
+        text-align: center;
+        width: 100%;
+        display: block;
+        margin-top: 8px;
+    }
 </style>
 
-    <div class="content-container">
-        <h1>{% if form.instance.pk %}Editar Cliente{% else %}Crear Cliente{% endif %}</h1>
-        <div class="form-container">
-            <form method="post" class="client-form">
-                {% csrf_token %}
-                <div class="form-fields">
-                    {{ form.as_p }}
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-guardar">Guardar</button>
-                    <a href="{% url 'lista_clientes' %}" class="btn btn-cancelar">Cancelar</a>
-                </div>
-            </form>
-        </div>
+<div class="content-container">
+    <div class="form-container">
+        <h1 class="cliente-titulo">{% if form.instance.pk %}Editar Cliente{% else %}Crear Cliente{% endif %}</h1>
+        <p class="cliente-parrafo">Ingrese los datos del nuevo cliente y verifique que la información sea correcta antes
+            de guardar.</p>
+
+        <form method="post" class="client-form">
+            {% csrf_token %}
+            <div class="form-fields">
+                {{ form.as_p }}
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-guardar">Guardar</button>
+            </div>
+            <a href="{% url 'lista_clientes' %}" class=" btn-cancelar">Cancelar</a>
+
+        </form>
     </div>
+</div>
 {% endblock %}
