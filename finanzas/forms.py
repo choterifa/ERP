@@ -22,6 +22,9 @@ class EgresoForm(forms.ModelForm):
     class Meta:
         model = Egreso
         fields = ['monto', 'descripcion']
+        widgets = {
+            'monto': forms.NumberInput(attrs={'class': 'form-control-monto'}),
+        }
 
     def clean_monto(self):
         monto = self.cleaned_data.get('monto')

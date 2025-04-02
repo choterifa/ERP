@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eliminar Egreso</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Poppins", sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -15,55 +18,81 @@
             align-items: center;
             height: 100vh;
         }
+
         .confirmation-container {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 27px 22px;
+            border-radius: 17px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 325px;
             text-align: center;
         }
-        h1 {
-            font-size: 20px;
+
+        .eliminar-titulo {
+            font-size: 19.4px;
+            font-weight: 600;
             margin-bottom: 20px;
             color: #333;
         }
-        p {
-            margin-bottom: 20px;
+
+        .eliminar-descripcion {
+            font-size: 14.5px;
             color: #555;
+            margin-bottom: 20px;
         }
+
         button {
-            background-color: #dc3545;
-            color: #fff;
+            font-family: inherit;
+            display: block;
             border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
+            width: 100%;
+            padding: 6px 20px;
             cursor: pointer;
             font-size: 16px;
-            width: 100%;
-            margin-bottom: 10px;
+            color: #fff;
+            border-radius: 8px;
+            background-color: #dc3545;
         }
+
         button:hover {
             background-color: #c82333;
         }
-        a {
-            color: #007bff;
+
+        .eliminar-cancelar {
             text-decoration: none;
+            color: gray;
+            border: 2px solid rgba(128, 128, 128, 0.252);
+            padding: 6px 20px;
+            border-radius: 8px;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .eliminar-cancelar:hover {
+            color: #333;
+        }
+
+
+        .botones-fomulario {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
         }
     </style>
 </head>
+
 <body>
     <div class="confirmation-container">
-        <h1>¿Estás seguro de que quieres eliminar este egreso?</h1>
-        <p>{{ egreso.descripcion }} - {{ egreso.monto }} ({{ egreso.fecha }})</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit">Sí, eliminar</button>
-        </form>
-        <a href="{% url 'lista_egresos' %}">Cancelar</a>
+        <h1 class="eliminar-titulo">¿Estás seguro de que quieres eliminar este egreso?</h1>
+        <p class="eliminar-descripcion">{{ egreso.descripcion }} - {{ egreso.monto }} ({{ egreso.fecha }})</p>
+        <div class="botones-fomulario">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit">Sí, eliminar</button>
+            </form>
+            <a href="{% url 'lista_egresos' %}" class="eliminar-cancelar">Cancelar</a>
+        </div>
+
     </div>
 </body>
+
 </html>
